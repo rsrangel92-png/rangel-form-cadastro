@@ -4,13 +4,30 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0a" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()" />
 <title>Ficha de Cadastro de Cliente — Rangel Advocacia Criminal</title>
 <meta name="description" content="Formulário de cadastro de cliente da Rangel Advocacia Criminal, com tratamento de dados em conformidade com a LGPD (Lei 13.709/2018)." />
 <link rel="icon" href="logo.png" />
+<link rel="preload" as="image" href="logo.png" fetchpriority="high" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://viacep.com.br">
+<!-- Fontes enxutas: 2 pesos por família + display=swap para nao bloquear render -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- SheetJS carregado sob demanda (no submit), evitando 750 KB no carregamento inicial -->
+<script>
+window.__loadXLSX = () => window.__xlsxPromise || (window.__xlsxPromise = new Promise((res, rej) => {
+  if (window.XLSX) return res(window.XLSX);
+  const s = document.createElement("script");
+  s.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
+  s.onload = () => res(window.XLSX);
+  s.onerror = () => rej(new Error("Falha ao carregar gerador de XLSX. Verifique sua conexão."));
+  document.head.appendChild(s);
+}));
+</script>
 <style>
 :root{
   --bg: #0b0b0c;
@@ -342,9 +359,8 @@ button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
           <div class="error" data-error-for="bairro"></div>
         </div>
         <div class="field col-6">
-          <label for="complemento">Complemento<span class="req">*</span></label>
-          <input id="complemento" name="complemento" type="text" placeholder="Apto, sala, bloco…" required />
-          <div class="error" data-error-for="complemento"></div>
+          <label for="complemento">Complemento <span style="color:var(--ink-mute);text-transform:none;letter-spacing:0;font-weight:400">(opcional)</span></label>
+          <input id="complemento" name="complemento" type="text" placeholder="Apto, sala, bloco…" />
         </div>
         <div class="field col-12">
           <label for="pais">País<span class="req">*</span></label>
@@ -690,6 +706,16 @@ form.addEventListener("submit", async (e) => {
 
   btnEnviar.disabled = true;
   btnEnviar.innerHTML = '<span class="spinner"></span>Enviando…';
+
+  // Carrega SheetJS sob demanda (mantém o load inicial enxuto)
+  try {
+    await window.__loadXLSX();
+  } catch(e){
+    btnEnviar.disabled = false;
+    btnEnviar.textContent = "Enviar e gerar arquivo";
+    alert(e.message || "Não foi possível carregar o gerador de arquivo. Verifique sua conexão e tente novamente.");
+    return;
+  }
 
   const { row, filename } = downloadXLSX();
   const result = await enviar(row, filename);
