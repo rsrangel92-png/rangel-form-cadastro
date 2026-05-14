@@ -301,9 +301,8 @@ button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
           <div class="error" data-error-for="telefone1"></div>
         </div>
         <div class="field col-6">
-          <label for="telefone2">Telefone 2<span class="req">*</span></label>
-          <input id="telefone2" name="telefone2" type="tel" inputmode="tel" placeholder="(21) 99999-9999" required />
-          <div class="error" data-error-for="telefone2"></div>
+          <label for="telefone2">Telefone 2 <span style="color:var(--ink-mute);text-transform:none;letter-spacing:0;font-weight:400">(opcional)</span></label>
+          <input id="telefone2" name="telefone2" type="tel" inputmode="tel" placeholder="(21) 99999-9999" />
         </div>
       </div>
     </section>
@@ -617,19 +616,22 @@ async function enviar(row, filename){
     arquivo: { nome: filename, conteudoBase64: b64 },
     meta: { origem: location.href, userAgent: navigator.userAgent, recebidoEm: new Date().toISOString() },
   };
-  try{
-    // Apps Script Web Apps bloqueiam preflight CORS quando o
-    // Content-Type é "application/json". Usar "text/plain" evita o
-    // preflight; o servidor parseia o corpo como JSON normalmente.
-    const r = await fetch(SUBMIT_ENDPOINT, {
+  // Apps Script Web Apps respondem a partir de outro domínio
+  // (script.googleusercontent.com via redirect) e mobile Safari +
+  // alguns Androids tratam essa cadeia de forma inconsistente. Usamos
+  // mode:"no-cors": a requisição é entregue, o servidor processa
+  // normalmente, mas o navegador devolve uma resposta opaca. Aceitamos
+  // como "enviado" desde que o fetch resolva sem lançar exceção.
+  try {
+    await fetch(SUBMIT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
+      mode: "no-cors",
       redirect: "follow",
+      keepalive: true,
     });
-    if (!r.ok) return { ok:false, status:r.status };
-    const j = await r.json().catch(() => ({}));
-    return { ok: j.ok !== false, status: r.status };
+    return { ok: true };
   } catch(e){
     return { ok: false, error: String(e) };
   }
