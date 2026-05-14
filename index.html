@@ -248,24 +248,26 @@ button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
         </div>
 
         <div class="field col-6">
-          <label for="cpfCnpj">CPF / CNPJ</label>
-          <input id="cpfCnpj" name="cpfCnpj" type="text" inputmode="numeric" placeholder="000.000.000-00" autocomplete="off" />
+          <label for="cpfCnpj">CPF / CNPJ<span class="req">*</span></label>
+          <input id="cpfCnpj" name="cpfCnpj" type="text" inputmode="numeric" placeholder="000.000.000-00" autocomplete="off" required />
           <div class="error" data-error-for="cpfCnpj"></div>
         </div>
 
         <div class="field col-6">
-          <label for="rg">RG</label>
-          <input id="rg" name="rg" type="text" placeholder="00.000.000-0" autocomplete="off" />
+          <label for="rg">RG<span class="req">*</span></label>
+          <input id="rg" name="rg" type="text" placeholder="00.000.000-0" autocomplete="off" required />
+          <div class="error" data-error-for="rg"></div>
         </div>
 
         <div class="field col-4">
-          <label for="nascimento">Data de Nascimento</label>
-          <input id="nascimento" name="nascimento" type="date" />
+          <label for="nascimento">Data de Nascimento<span class="req">*</span></label>
+          <input id="nascimento" name="nascimento" type="date" required />
+          <div class="error" data-error-for="nascimento"></div>
         </div>
 
         <div class="field col-4">
-          <label for="estadoCivil">Estado Civil</label>
-          <select id="estadoCivil" name="estadoCivil">
+          <label for="estadoCivil">Estado Civil<span class="req">*</span></label>
+          <select id="estadoCivil" name="estadoCivil" required>
             <option value=""></option>
             <option>Solteiro(a)</option>
             <option>Casado(a)</option>
@@ -274,11 +276,13 @@ button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
             <option>Separado(a)</option>
             <option>Viúvo(a)</option>
           </select>
+          <div class="error" data-error-for="estadoCivil"></div>
         </div>
 
         <div class="field col-4">
-          <label for="profissao">Profissão</label>
-          <input id="profissao" name="profissao" type="text" autocomplete="organization-title" />
+          <label for="profissao">Profissão<span class="req">*</span></label>
+          <input id="profissao" name="profissao" type="text" autocomplete="organization-title" required />
+          <div class="error" data-error-for="profissao"></div>
         </div>
       </div>
     </section>
@@ -287,17 +291,19 @@ button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
       <h3><span class="num">2</span> Contato</h3>
       <div class="grid">
         <div class="field col-12">
-          <label for="email">E-mail</label>
-          <input id="email" name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" />
+          <label for="email">E-mail<span class="req">*</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" required />
           <div class="error" data-error-for="email"></div>
         </div>
         <div class="field col-6">
-          <label for="telefone1">Telefone 1</label>
-          <input id="telefone1" name="telefone1" type="tel" inputmode="tel" autocomplete="tel" placeholder="(21) 99999-9999" />
+          <label for="telefone1">Telefone 1<span class="req">*</span></label>
+          <input id="telefone1" name="telefone1" type="tel" inputmode="tel" autocomplete="tel" placeholder="(21) 99999-9999" required />
+          <div class="error" data-error-for="telefone1"></div>
         </div>
         <div class="field col-6">
-          <label for="telefone2">Telefone 2</label>
-          <input id="telefone2" name="telefone2" type="tel" inputmode="tel" placeholder="(21) 99999-9999" />
+          <label for="telefone2">Telefone 2<span class="req">*</span></label>
+          <input id="telefone2" name="telefone2" type="tel" inputmode="tel" placeholder="(21) 99999-9999" required />
+          <div class="error" data-error-for="telefone2"></div>
         </div>
       </div>
     </section>
@@ -306,37 +312,45 @@ button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
       <h3><span class="num">3</span> Endereço</h3>
       <div class="grid">
         <div class="field col-4">
-          <label for="cep">CEP</label>
-          <input id="cep" name="cep" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" />
+          <label for="cep">CEP<span class="req">*</span></label>
+          <input id="cep" name="cep" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" required />
           <div class="hint" id="cep-status">Preencha para autocompletar endereço</div>
+          <div class="error" data-error-for="cep"></div>
         </div>
         <div class="field col-2 col-4-m">
-          <label for="estado">UF</label>
-          <input id="estado" name="estado" type="text" maxlength="2" autocomplete="address-level1" placeholder="RJ" style="text-transform:uppercase" />
+          <label for="estado">UF<span class="req">*</span></label>
+          <input id="estado" name="estado" type="text" maxlength="2" autocomplete="address-level1" placeholder="RJ" style="text-transform:uppercase" required />
+          <div class="error" data-error-for="estado"></div>
         </div>
         <div class="field col-6 col-4-m">
-          <label for="cidade">Cidade</label>
-          <input id="cidade" name="cidade" type="text" autocomplete="address-level2" />
+          <label for="cidade">Cidade<span class="req">*</span></label>
+          <input id="cidade" name="cidade" type="text" autocomplete="address-level2" required />
+          <div class="error" data-error-for="cidade"></div>
         </div>
         <div class="field col-8">
-          <label for="logradouro">Logradouro</label>
-          <input id="logradouro" name="logradouro" type="text" autocomplete="address-line1" placeholder="Rua, Avenida, Travessa…" />
+          <label for="logradouro">Logradouro<span class="req">*</span></label>
+          <input id="logradouro" name="logradouro" type="text" autocomplete="address-line1" placeholder="Rua, Avenida, Travessa…" required />
+          <div class="error" data-error-for="logradouro"></div>
         </div>
         <div class="field col-4">
-          <label for="numero">Número</label>
-          <input id="numero" name="numero" type="text" autocomplete="address-line2" />
+          <label for="numero">Número<span class="req">*</span></label>
+          <input id="numero" name="numero" type="text" autocomplete="address-line2" required />
+          <div class="error" data-error-for="numero"></div>
         </div>
         <div class="field col-6">
-          <label for="bairro">Bairro</label>
-          <input id="bairro" name="bairro" type="text" autocomplete="address-level3" />
+          <label for="bairro">Bairro<span class="req">*</span></label>
+          <input id="bairro" name="bairro" type="text" autocomplete="address-level3" required />
+          <div class="error" data-error-for="bairro"></div>
         </div>
         <div class="field col-6">
-          <label for="complemento">Complemento</label>
-          <input id="complemento" name="complemento" type="text" placeholder="Apto, sala, bloco…" />
+          <label for="complemento">Complemento<span class="req">*</span></label>
+          <input id="complemento" name="complemento" type="text" placeholder="Apto, sala, bloco…" required />
+          <div class="error" data-error-for="complemento"></div>
         </div>
         <div class="field col-12">
-          <label for="pais">País</label>
-          <input id="pais" name="pais" type="text" autocomplete="country-name" value="Brasil" />
+          <label for="pais">País<span class="req">*</span></label>
+          <input id="pais" name="pais" type="text" autocomplete="country-name" value="Brasil" required />
+          <div class="error" data-error-for="pais"></div>
         </div>
       </div>
     </section>
@@ -630,16 +644,36 @@ const btnEnviar = document.getElementById("btnEnviar");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  let ok = true;
-  if (!document.getElementById("nome").value.trim()){
-    setError("nome", "Informe o nome completo."); ok = false;
-  } else setError("nome", "");
+  // Limpa erros anteriores
+  document.querySelectorAll(".error").forEach(el => el.textContent = "");
+  document.querySelectorAll("[aria-invalid]").forEach(el => el.removeAttribute("aria-invalid"));
 
+  let ok = true;
+  let primeiroErro = null;
+
+  // Todos os campos são obrigatórios — itera sobre [required]
+  form.querySelectorAll("[required]").forEach(el => {
+    if (!el.value || !String(el.value).trim()){
+      setError(el.id, "Campo obrigatório.");
+      ok = false;
+      if (!primeiroErro) primeiroErro = el;
+    }
+  });
+
+  // Validações específicas adicionais
   const cpf = document.getElementById("cpfCnpj").value;
-  if (cpf && !validaCpfCnpj(cpf)){ setError("cpfCnpj","CPF/CNPJ inválido."); ok = false; }
+  if (cpf && !validaCpfCnpj(cpf)){
+    setError("cpfCnpj","CPF/CNPJ inválido.");
+    ok = false;
+    if (!primeiroErro) primeiroErro = document.getElementById("cpfCnpj");
+  }
 
   const email = document.getElementById("email").value.trim();
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ setError("email","E-mail inválido."); ok = false; }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    setError("email","E-mail inválido.");
+    ok = false;
+    if (!primeiroErro) primeiroErro = document.getElementById("email");
+  }
 
   if (!document.getElementById("consentimento").checked){
     alert("Para prosseguir, é necessário ler e concordar com o Aviso de Privacidade (LGPD).");
@@ -647,7 +681,8 @@ form.addEventListener("submit", async (e) => {
   }
 
   if (!ok){
-    document.querySelector('[aria-invalid="true"]')?.scrollIntoView({behavior:"smooth", block:"center"});
+    (primeiroErro || document.querySelector('[aria-invalid="true"]'))?.scrollIntoView({behavior:"smooth", block:"center"});
+    (primeiroErro || document.querySelector('[aria-invalid="true"]'))?.focus?.();
     return;
   }
 
