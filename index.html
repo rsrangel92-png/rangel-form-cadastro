@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0a" />
+<title>Ficha de Cadastro de Cliente — RANGEL Advocacia Criminal</title>
+<meta name="description" content="Formulário de cadastro de cliente da RANGEL Advocacia Criminal, com tratamento de dados em conformidade com a LGPD (Lei 13.709/2018)." />
+<link rel="icon" href="logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg: #0b0b0c;
+  --bg-soft: #111114;
+  --surface: #15151a;
+  --surface-2: #1c1c22;
+  --line: #2a2a32;
+  --ink: #f2ece1;
+  --ink-soft: #c9c2b6;
+  --ink-mute: #8a8478;
+  --gold: #c9a449;
+  --gold-soft: #d8b86b;
+  --gold-deep: #8e6f24;
+  --danger: #d97a6c;
+  --ok: #6ec28a;
+  --shadow: 0 30px 60px -30px rgba(0,0,0,.6), 0 2px 8px -2px rgba(0,0,0,.4);
+  --radius: 14px;
+  --radius-sm: 10px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+body{
+  background:
+    radial-gradient(1200px 600px at 50% -200px, rgba(201,164,73,.10), transparent 60%),
+    radial-gradient(800px 400px at 100% 100%, rgba(201,164,73,.06), transparent 60%),
+    var(--bg);
+  min-height:100vh;
+}
+
+.container{max-width:880px;margin:0 auto;padding:48px 24px 64px}
+
+.brand{display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 0 8px}
+.brand img{
+  width:200px;height:auto;
+  filter:drop-shadow(0 12px 32px rgba(201,164,73,.28)) drop-shadow(0 0 1px rgba(201,164,73,.15));
+}
+.brand h1{font-family:'Cormorant Garamond',serif;font-weight:500;letter-spacing:.5px;font-size:32px;margin:24px 0 4px;color:var(--ink)}
+.brand h1 .gold{color:var(--gold-soft)}
+.brand p.sub{margin:0;color:var(--ink-mute);font-size:14px;letter-spacing:.12em;text-transform:uppercase}
+
+.divider{display:flex;align-items:center;gap:14px;margin:32px 0 8px;color:var(--gold-soft);font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:.06em}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,164,73,.45),transparent)}
+.divider span{padding:0 6px}
+
+.lgpd{
+  background:linear-gradient(180deg,rgba(201,164,73,.06),rgba(201,164,73,.02));
+  border:1px solid rgba(201,164,73,.25);
+  border-radius:var(--radius);
+  padding:24px 26px;
+  margin:24px 0 8px;
+}
+.lgpd h2{margin:0 0 6px;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--gold-soft);letter-spacing:.02em}
+.lgpd p, .lgpd li{font-size:14.5px;line-height:1.65;color:var(--ink-soft);margin:8px 0}
+.lgpd ul{padding-left:20px;margin:8px 0}
+.lgpd details{margin-top:10px;border-top:1px dashed rgba(201,164,73,.2);padding-top:10px}
+.lgpd summary{cursor:pointer;color:var(--gold-soft);font-weight:500;outline:none;list-style:none;display:flex;align-items:center;gap:8px;user-select:none}
+.lgpd summary::-webkit-details-marker{display:none}
+.lgpd summary::before{content:"›";display:inline-block;transition:transform .2s;color:var(--gold)}
+.lgpd details[open] summary::before{transform:rotate(90deg)}
+.lgpd .legal-refs{font-size:13px;color:var(--ink-mute);margin-top:8px}
+
+.card{
+  background:linear-gradient(180deg,var(--surface),var(--surface-2));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:28px 26px 24px;
+  margin:18px 0;
+  box-shadow:var(--shadow);
+}
+.card h3{
+  margin:0 0 18px;
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;
+  font-size:24px;
+  letter-spacing:.02em;
+  color:var(--ink);
+  display:flex;align-items:center;gap:12px;
+}
+.card h3 .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(160deg,var(--gold),var(--gold-deep));
+  color:#1a1208;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;
+  box-shadow:0 4px 10px -2px rgba(201,164,73,.5);
+}
+
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.col-12{grid-column:span 12}
+.field.col-8{grid-column:span 8}
+.field.col-6{grid-column:span 6}
+.field.col-4{grid-column:span 4}
+.field.col-3{grid-column:span 3}
+.field.col-2{grid-column:span 2}
+@media (max-width:680px){
+  .field[class*=col-]{grid-column:span 12}
+  .field.col-4-m{grid-column:span 6}
+}
+
+label{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);font-weight:500}
+label .req{color:var(--gold-soft);margin-left:4px}
+
+input, select, textarea{
+  font:inherit;color:var(--ink);
+  background:#0e0e12;
+  border:1px solid var(--line);
+  border-radius:var(--radius-sm);
+  padding:12px 14px;
+  outline:none;
+  transition:border-color .15s, box-shadow .15s, background .15s;
+}
+input::placeholder, textarea::placeholder{color:#5b5648}
+input:hover, select:hover, textarea:hover{border-color:#3a3a44}
+input:focus, select:focus, textarea:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(201,164,73,.15);
+  background:#0e0e12;
+}
+input[aria-invalid="true"]{border-color:var(--danger);box-shadow:0 0 0 3px rgba(217,122,108,.15)}
+.hint{font-size:12px;color:var(--ink-mute);margin-top:2px}
+.error{font-size:12.5px;color:var(--danger);margin-top:2px;min-height:1em}
+
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:36px}
+
+.consent{
+  display:flex;gap:14px;align-items:flex-start;
+  background:linear-gradient(180deg,rgba(201,164,73,.04),transparent);
+  border:1px solid rgba(201,164,73,.25);
+  border-radius:var(--radius);
+  padding:18px 20px;margin-top:20px;
+}
+.consent input[type=checkbox]{
+  appearance:none;-webkit-appearance:none;
+  width:22px;height:22px;flex-shrink:0;margin-top:2px;
+  border:1.5px solid var(--gold);border-radius:5px;
+  background:#0e0e12;cursor:pointer;position:relative;
+  transition:background .15s;
+}
+.consent input[type=checkbox]:checked{
+  background:linear-gradient(160deg,var(--gold),var(--gold-deep));
+}
+.consent input[type=checkbox]:checked::after{
+  content:"";position:absolute;left:7px;top:2px;width:6px;height:12px;
+  border:solid #1a1208;border-width:0 2.5px 2.5px 0;transform:rotate(45deg);
+}
+.consent label{text-transform:none;letter-spacing:0;font-size:14.5px;color:var(--ink-soft);font-weight:400;cursor:pointer}
+.consent strong{color:var(--ink)}
+
+.actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end;margin-top:22px}
+button{font:inherit;cursor:pointer;border:none;border-radius:var(--radius-sm);padding:14px 22px;font-weight:600;letter-spacing:.02em;transition:transform .12s, box-shadow .15s, background .15s;}
+button.primary{
+  background:linear-gradient(160deg,var(--gold-soft),var(--gold) 40%,var(--gold-deep));
+  color:#1a1208;
+  box-shadow:0 10px 24px -10px rgba(201,164,73,.55), inset 0 1px 0 rgba(255,255,255,.18);
+}
+button.primary:hover{transform:translateY(-1px);box-shadow:0 14px 28px -10px rgba(201,164,73,.65), inset 0 1px 0 rgba(255,255,255,.22)}
+button.primary:active{transform:translateY(0)}
+button.primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+button.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
+button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
+
+.foot{
+  text-align:center;color:var(--ink-mute);font-size:12.5px;
+  padding:36px 16px 8px;line-height:1.7;
+}
+.foot a{color:var(--gold-soft);text-decoration:none}
+.foot a:hover{text-decoration:underline}
+.foot .sep{margin:0 8px;color:var(--gold-deep)}
+
+.success-screen{
+  display:none;text-align:center;padding:60px 24px;
+}
+.success-screen .seal{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 18px;
+  background:linear-gradient(160deg,var(--gold-soft),var(--gold-deep));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 30px -8px rgba(201,164,73,.5);
+}
+.success-screen .seal svg{width:38px;height:38px;color:#1a1208}
+.success-screen h2{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;margin:6px 0 8px;color:var(--ink)}
+.success-screen p{color:var(--ink-soft);max-width:520px;margin:8px auto}
+
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(26,18,8,.3);border-top-color:#1a1208;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media print{
+  body{background:#fff;color:#000}
+  .actions, .consent input{display:none}
+  .card,.lgpd{box-shadow:none;border-color:#ddd}
+}
+</style>
+</head>
+<body>
+<main class="container" id="app">
+
+  <header class="brand">
+    <img src="logo.png" alt="RANGEL Advocacia Criminal" />
+    <h1>Ficha de Cadastro <span class="gold">de Cliente</span></h1>
+    <p class="sub">RANGEL Advocacia Criminal</p>
+  </header>
+
+  <section class="lgpd" aria-labelledby="lgpd-title">
+    <h2 id="lgpd-title">Aviso de Privacidade · LGPD</h2>
+    <p>Os dados pessoais aqui informados serão tratados pela <strong>RANGEL Advocacia Criminal</strong>, na qualidade de Controladora, exclusivamente para constituição da relação cliente–advogado, prática de atos processuais e administrativos do mandato, cumprimento de obrigações legais e regulamentares (notadamente o Estatuto da Advocacia — Lei 8.906/94 — e o Código de Ética e Disciplina da OAB) e exercício regular de direitos em processos judiciais e administrativos.</p>
+    <details>
+      <summary>Ver finalidades, bases legais, retenção e seus direitos</summary>
+      <p><strong>Finalidades específicas:</strong></p>
+      <ul>
+        <li>Identificação e qualificação do cliente para fins contratuais e processuais;</li>
+        <li>Comunicação sobre o andamento de processos, audiências e prazos;</li>
+        <li>Emissão de procurações, contratos de honorários, recibos e documentos fiscais;</li>
+        <li>Cumprimento de deveres legais (sigilo profissional, registros contábeis e tributários).</li>
+      </ul>
+      <p><strong>Bases legais (LGPD, art. 7º e art. 11):</strong> execução de contrato (inc. V), cumprimento de obrigação legal ou regulatória (inc. II), exercício regular de direitos em processo judicial, administrativo ou arbitral (inc. VI) e, quando aplicável, consentimento (inc. I) para dados não estritamente necessários.</p>
+      <p><strong>Compartilhamento:</strong> os dados podem ser compartilhados, no estritamente necessário, com órgãos do Poder Judiciário, Ministério Público, autoridades policiais e administrativas, peritos, correspondentes jurídicos contratados sob dever de sigilo e com a plataforma de gestão jurídica utilizada pelo escritório (sob contrato de operador, art. 39 da LGPD).</p>
+      <p><strong>Retenção:</strong> os dados serão mantidos enquanto vigente a relação contratual e, após seu encerramento, pelo prazo mínimo de 5 (cinco) anos (Provimento CFOAB 188/2018 e prescrições legais aplicáveis), podendo ser conservados por períodos maiores quando exigido por lei ou para resguardo de direitos.</p>
+      <p><strong>Sigilo profissional:</strong> independentemente da LGPD, todas as informações estão protegidas pelo sigilo profissional do advogado, dever inviolável previsto no art. 7º, II, da Lei 8.906/94 e no Código de Ética e Disciplina da OAB.</p>
+      <p><strong>Seus direitos (LGPD, art. 18):</strong> confirmação da existência de tratamento, acesso, correção, anonimização, bloqueio ou eliminação de dados desnecessários, portabilidade, informação sobre compartilhamentos, revogação do consentimento e oposição ao tratamento.</p>
+      <p><strong>Encarregado pelo Tratamento de Dados (DPO):</strong> Rafael Rangel — <a href="mailto:atendimento@rangeladvocaciacriminal.com" style="color:var(--gold-soft)">atendimento@rangeladvocaciacriminal.com</a>.</p>
+      <p class="legal-refs">Referências: Constituição Federal, art. 5º, X, XII e LXIII; Lei 13.709/2018 (LGPD); Lei 8.906/94 (Estatuto da Advocacia); Código de Ética e Disciplina da OAB; Provimento CFOAB 205/2021 (publicidade) e 188/2018 (guarda de documentos).</p>
+    </details>
+  </section>
+
+  <form id="form" novalidate autocomplete="on">
+
+    <section class="card">
+      <h3><span class="num">1</span> Dados Pessoais</h3>
+      <div class="grid">
+        <div class="field col-12">
+          <label for="nome">Nome completo<span class="req">*</span></label>
+          <input id="nome" name="nome" type="text" required autocomplete="name" placeholder="Como consta no documento de identidade" />
+          <div class="error" data-error-for="nome"></div>
+        </div>
+
+        <div class="field col-6">
+          <label for="cpfCnpj">CPF / CNPJ</label>
+          <input id="cpfCnpj" name="cpfCnpj" type="text" inputmode="numeric" placeholder="000.000.000-00" autocomplete="off" />
+          <div class="error" data-error-for="cpfCnpj"></div>
+        </div>
+
+        <div class="field col-6">
+          <label for="rg">RG</label>
+          <input id="rg" name="rg" type="text" placeholder="00.000.000-0" autocomplete="off" />
+        </div>
+
+        <div class="field col-4">
+          <label for="nascimento">Data de Nascimento</label>
+          <input id="nascimento" name="nascimento" type="date" />
+        </div>
+
+        <div class="field col-4">
+          <label for="estadoCivil">Estado Civil</label>
+          <select id="estadoCivil" name="estadoCivil">
+            <option value=""></option>
+            <option>Solteiro(a)</option>
+            <option>Casado(a)</option>
+            <option>União Estável</option>
+            <option>Divorciado(a)</option>
+            <option>Separado(a)</option>
+            <option>Viúvo(a)</option>
+          </select>
+        </div>
+
+        <div class="field col-4">
+          <label for="profissao">Profissão</label>
+          <input id="profissao" name="profissao" type="text" autocomplete="organization-title" />
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3><span class="num">2</span> Contato</h3>
+      <div class="grid">
+        <div class="field col-12">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" />
+          <div class="error" data-error-for="email"></div>
+        </div>
+        <div class="field col-6">
+          <label for="telefone1">Telefone 1</label>
+          <input id="telefone1" name="telefone1" type="tel" inputmode="tel" autocomplete="tel" placeholder="(21) 99999-9999" />
+        </div>
+        <div class="field col-6">
+          <label for="telefone2">Telefone 2</label>
+          <input id="telefone2" name="telefone2" type="tel" inputmode="tel" placeholder="(21) 99999-9999" />
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3><span class="num">3</span> Endereço</h3>
+      <div class="grid">
+        <div class="field col-4">
+          <label for="cep">CEP</label>
+          <input id="cep" name="cep" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" />
+          <div class="hint" id="cep-status">Preencha para autocompletar endereço</div>
+        </div>
+        <div class="field col-2 col-4-m">
+          <label for="estado">UF</label>
+          <input id="estado" name="estado" type="text" maxlength="2" autocomplete="address-level1" placeholder="RJ" style="text-transform:uppercase" />
+        </div>
+        <div class="field col-6 col-4-m">
+          <label for="cidade">Cidade</label>
+          <input id="cidade" name="cidade" type="text" autocomplete="address-level2" />
+        </div>
+        <div class="field col-8">
+          <label for="logradouro">Logradouro</label>
+          <input id="logradouro" name="logradouro" type="text" autocomplete="address-line1" placeholder="Rua, Avenida, Travessa…" />
+        </div>
+        <div class="field col-4">
+          <label for="numero">Número</label>
+          <input id="numero" name="numero" type="text" autocomplete="address-line2" />
+        </div>
+        <div class="field col-6">
+          <label for="bairro">Bairro</label>
+          <input id="bairro" name="bairro" type="text" autocomplete="address-level3" />
+        </div>
+        <div class="field col-6">
+          <label for="complemento">Complemento</label>
+          <input id="complemento" name="complemento" type="text" placeholder="Apto, sala, bloco…" />
+        </div>
+        <div class="field col-12">
+          <label for="pais">País</label>
+          <input id="pais" name="pais" type="text" autocomplete="country-name" value="Brasil" />
+        </div>
+      </div>
+    </section>
+
+    <div class="consent">
+      <input type="checkbox" id="consentimento" required />
+      <label for="consentimento">
+        <strong>Li e estou de acordo com o Aviso de Privacidade.</strong> Autorizo a <strong>RANGEL Advocacia Criminal</strong> a tratar meus dados pessoais para as finalidades indicadas, em conformidade com a <strong>Lei 13.709/2018 (LGPD)</strong>, com o <strong>Estatuto da Advocacia (Lei 8.906/94)</strong> e demais normas aplicáveis.
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="ghost" id="btnLimpar">Limpar</button>
+      <button type="submit" class="primary" id="btnEnviar">Enviar e gerar arquivo</button>
+    </div>
+  </form>
+
+  <section class="success-screen" id="success">
+    <div class="seal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2>Cadastro recebido</h2>
+    <p id="successMsg">Obrigado. Sua ficha foi recebida pelo escritório e o arquivo de importação foi gerado.</p>
+    <div class="actions" style="justify-content:center;margin-top:24px">
+      <button type="button" class="ghost" id="btnNovo">Preencher outra ficha</button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <strong>RANGEL Advocacia Criminal</strong>
+    <span class="sep">·</span>
+    <a href="mailto:atendimento@rangeladvocaciacriminal.com">atendimento@rangeladvocaciacriminal.com</a>
+    <br/>
+    Tratamento de dados em conformidade com a Lei 13.709/2018 (LGPD).
+  </footer>
+
+</main>
+
+<script>
+// ============================================================
+// Configuração
+// ============================================================
+// Cole aqui a URL do Apps Script (Implantar → Aplicativo da Web → URL):
+//   https://script.google.com/macros/s/AKfycb.../exec
+// Enquanto estiver vazia, o formulário apenas gera o XLSX para
+// download local — útil para testes.
+const SUBMIT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyRzh2jc5kaR34lPkbFqGN36t0oF-5nt0m5fFtVY7d5NzwS5zRR7sIOlUeJQpb4DbhZtw/exec";
+
+// Ordem ESTRITA das colunas exigida pelo LinkLei. Não alterar.
+const LINKLEI_COLUMNS = [
+  "Nome *",
+  "E-mail",
+  "CPF/CNPJ",
+  "RG",
+  "Telefone 1 ",
+  "Telefone 2 ",
+  "Data de Nascimento",
+  "Estado Civil",
+  "Profissão",
+  "CEP",
+  "Estado",
+  "Cidade",
+  "Logradouro",
+  "Bairro",
+  "Número",
+  "Complemento",
+  "País",
+];
+
+// ============================================================
+// Máscaras
+// ============================================================
+const onlyDigits = (s) => (s || "").replace(/\D+/g, "");
+
+function maskCpfCnpj(v){
+  const d = onlyDigits(v).slice(0,14);
+  if (d.length <= 11){
+    return d
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/\.(\d{3})(\d)/, ".$1-$2");
+  }
+  return d
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/, ".$1/$2")
+    .replace(/(\d{4})(\d)/, "$1-$2");
+}
+
+function maskCep(v){
+  const d = onlyDigits(v).slice(0,8);
+  return d.replace(/^(\d{5})(\d)/, "$1-$2");
+}
+
+function maskPhone(v){
+  const d = onlyDigits(v).slice(0,11);
+  if (d.length <= 10){
+    return d
+      .replace(/^(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+  }
+  return d
+    .replace(/^(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+function bindMask(id, fn){
+  const el = document.getElementById(id);
+  el.addEventListener("input", () => { el.value = fn(el.value); });
+}
+bindMask("cpfCnpj", maskCpfCnpj);
+bindMask("cep", maskCep);
+bindMask("telefone1", maskPhone);
+bindMask("telefone2", maskPhone);
+
+// ============================================================
+// Validações
+// ============================================================
+function validaCPF(cpf){
+  const d = onlyDigits(cpf);
+  if (d.length !== 11 || /^(\d)\1+$/.test(d)) return false;
+  let s = 0;
+  for (let i=0;i<9;i++) s += +d[i] * (10 - i);
+  let r = (s * 10) % 11; if (r === 10) r = 0;
+  if (r !== +d[9]) return false;
+  s = 0;
+  for (let i=0;i<10;i++) s += +d[i] * (11 - i);
+  r = (s * 10) % 11; if (r === 10) r = 0;
+  return r === +d[10];
+}
+
+function validaCNPJ(cnpj){
+  const d = onlyDigits(cnpj);
+  if (d.length !== 14 || /^(\d)\1+$/.test(d)) return false;
+  const calc = (n) => {
+    const w = n === 12 ? [5,4,3,2,9,8,7,6,5,4,3,2] : [6,5,4,3,2,9,8,7,6,5,4,3,2];
+    let s = 0;
+    for (let i=0;i<n;i++) s += +d[i] * w[i];
+    const r = s % 11;
+    return r < 2 ? 0 : 11 - r;
+  };
+  return calc(12) === +d[12] && calc(13) === +d[13];
+}
+
+function validaCpfCnpj(v){
+  const d = onlyDigits(v);
+  if (!d) return true;
+  if (d.length === 11) return validaCPF(d);
+  if (d.length === 14) return validaCNPJ(d);
+  return false;
+}
+
+function setError(id, msg){
+  const el = document.getElementById(id);
+  const err = document.querySelector(`[data-error-for="${id}"]`);
+  if (msg){ el.setAttribute("aria-invalid","true"); if (err) err.textContent = msg; }
+  else { el.removeAttribute("aria-invalid"); if (err) err.textContent = ""; }
+}
+
+document.getElementById("cpfCnpj").addEventListener("blur", (e) => {
+  const v = e.target.value;
+  setError("cpfCnpj", v && !validaCpfCnpj(v) ? "CPF/CNPJ inválido." : "");
+});
+document.getElementById("email").addEventListener("blur", (e) => {
+  const v = e.target.value.trim();
+  setError("email", v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "E-mail inválido." : "");
+});
+document.getElementById("estado").addEventListener("input", (e) => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,2);
+});
+
+// ============================================================
+// ViaCEP — autocomplete de endereço
+// ============================================================
+document.getElementById("cep").addEventListener("blur", async (e) => {
+  const status = document.getElementById("cep-status");
+  const cep = onlyDigits(e.target.value);
+  if (cep.length !== 8){ status.textContent = "Preencha para autocompletar endereço"; return; }
+  status.textContent = "Buscando endereço…";
+  try{
+    const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const j = await r.json();
+    if (j.erro){ status.textContent = "CEP não encontrado."; return; }
+    const set = (id,val) => { const el=document.getElementById(id); if (!el.value) el.value = val || ""; };
+    set("estado", j.uf);
+    set("cidade", j.localidade);
+    set("logradouro", j.logradouro);
+    set("bairro", j.bairro);
+    set("pais", "Brasil");
+    status.textContent = "Endereço preenchido — confira e complete o número.";
+  } catch(err){
+    status.textContent = "Falha ao consultar CEP. Preencha manualmente.";
+  }
+});
+
+// ============================================================
+// Coleta e formatação final
+// ============================================================
+function brDate(iso){
+  if (!iso) return "";
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
+
+function buildRow(){
+  const v = (id) => document.getElementById(id).value.trim();
+  // Atenção: a ordem aqui DEVE corresponder a LINKLEI_COLUMNS.
+  return {
+    "Nome *":             v("nome"),
+    "E-mail":             v("email"),
+    "CPF/CNPJ":           v("cpfCnpj"),
+    "RG":                 v("rg"),
+    "Telefone 1 ":        v("telefone1"),
+    "Telefone 2 ":        v("telefone2"),
+    "Data de Nascimento": brDate(v("nascimento")),
+    "Estado Civil":       v("estadoCivil"),
+    "Profissão":          v("profissao"),
+    "CEP":                v("cep"),
+    "Estado":             v("estado"),
+    "Cidade":             v("cidade"),
+    "Logradouro":         v("logradouro"),
+    "Bairro":             v("bairro"),
+    "Número":             v("numero"),
+    "Complemento":        v("complemento"),
+    "País":               v("pais"),
+  };
+}
+
+// ============================================================
+// Geração do XLSX no formato exato do LinkLei
+// ============================================================
+function gerarXLSX(row){
+  const aoa = [LINKLEI_COLUMNS, LINKLEI_COLUMNS.map(c => row[c] || "")];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"] = [
+    {wch:25},{wch:28},{wch:18},{wch:14},{wch:18},{wch:18},
+    {wch:20},{wch:16},{wch:20},{wch:12},{wch:6},{wch:22},
+    {wch:30},{wch:20},{wch:10},{wch:24},{wch:14},
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Clientes");
+  const slug = (row["Nome *"] || "cliente").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-zA-Z0-9]+/g,"_").replace(/^_|_$/g,"").toLowerCase() || "cliente";
+  const stamp = new Date().toISOString().slice(0,10);
+  return { wb, filename: `cadastro_${slug}_${stamp}.xlsx` };
+}
+
+function downloadXLSX(){
+  const row = buildRow();
+  const { wb, filename } = gerarXLSX(row);
+  XLSX.writeFile(wb, filename);
+  return { row, filename };
+}
+
+// ============================================================
+// Envio
+// ============================================================
+async function enviar(row, filename){
+  if (!SUBMIT_ENDPOINT) return { ok:true, offline:true };
+  // Gera o XLSX como base64 e envia junto, para o backend salvar/emailar.
+  const { wb } = gerarXLSX(row);
+  const b64 = XLSX.write(wb, { type:"base64", bookType:"xlsx" });
+  const payload = {
+    cliente: row,
+    arquivo: { nome: filename, conteudoBase64: b64 },
+    meta: { origem: location.href, userAgent: navigator.userAgent, recebidoEm: new Date().toISOString() },
+  };
+  try{
+    // Apps Script Web Apps bloqueiam preflight CORS quando o
+    // Content-Type é "application/json". Usar "text/plain" evita o
+    // preflight; o servidor parseia o corpo como JSON normalmente.
+    const r = await fetch(SUBMIT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      redirect: "follow",
+    });
+    if (!r.ok) return { ok:false, status:r.status };
+    const j = await r.json().catch(() => ({}));
+    return { ok: j.ok !== false, status: r.status };
+  } catch(e){
+    return { ok: false, error: String(e) };
+  }
+}
+
+// ============================================================
+// Fluxo principal
+// ============================================================
+const form = document.getElementById("form");
+const btnEnviar = document.getElementById("btnEnviar");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  let ok = true;
+  if (!document.getElementById("nome").value.trim()){
+    setError("nome", "Informe o nome completo."); ok = false;
+  } else setError("nome", "");
+
+  const cpf = document.getElementById("cpfCnpj").value;
+  if (cpf && !validaCpfCnpj(cpf)){ setError("cpfCnpj","CPF/CNPJ inválido."); ok = false; }
+
+  const email = document.getElementById("email").value.trim();
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ setError("email","E-mail inválido."); ok = false; }
+
+  if (!document.getElementById("consentimento").checked){
+    alert("Para prosseguir, é necessário ler e concordar com o Aviso de Privacidade (LGPD).");
+    ok = false;
+  }
+
+  if (!ok){
+    document.querySelector('[aria-invalid="true"]')?.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+
+  btnEnviar.disabled = true;
+  btnEnviar.innerHTML = '<span class="spinner"></span>Enviando…';
+
+  const { row, filename } = downloadXLSX();
+  const result = await enviar(row, filename);
+
+  document.getElementById("form").style.display = "none";
+  document.querySelector(".consent").style.display = "none";
+  document.querySelector(".lgpd").style.display = "none";
+
+  const msg = document.getElementById("successMsg");
+  if (result.offline){
+    msg.textContent = "Obrigado. O arquivo de cadastro foi gerado e baixado automaticamente. Envie-o ao escritório no canal combinado (e-mail ou WhatsApp).";
+  } else if (result.ok){
+    msg.textContent = "Obrigado. Sua ficha foi recebida pelo escritório e o arquivo de importação foi gerado.";
+  } else {
+    msg.textContent = "O arquivo foi gerado e baixado, mas houve falha no envio automático. Envie-o ao escritório pelo canal combinado.";
+  }
+  document.getElementById("success").style.display = "block";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+document.getElementById("btnLimpar").addEventListener("click", () => {
+  if (confirm("Limpar todos os campos?")){
+    form.reset();
+    document.querySelectorAll(".error").forEach(e => e.textContent = "");
+    document.querySelectorAll("[aria-invalid]").forEach(e => e.removeAttribute("aria-invalid"));
+    document.getElementById("pais").value = "Brasil";
+    document.getElementById("cep-status").textContent = "Preencha para autocompletar endereço";
+  }
+});
+
+document.getElementById("btnNovo").addEventListener("click", () => {
+  form.reset();
+  document.getElementById("pais").value = "Brasil";
+  document.getElementById("form").style.display = "";
+  document.querySelector(".consent").style.display = "";
+  document.querySelector(".lgpd").style.display = "";
+  document.getElementById("success").style.display = "none";
+  btnEnviar.disabled = false;
+  btnEnviar.textContent = "Enviar e gerar arquivo";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+</script>
+</body>
+</html>
