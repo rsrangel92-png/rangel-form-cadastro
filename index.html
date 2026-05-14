@@ -633,24 +633,35 @@ async function enviar(row, filename){
     meta: { origem: location.href, userAgent: navigator.userAgent, recebidoEm: new Date().toISOString() },
   };
   // Apps Script Web Apps respondem a partir de outro domínio
-  // (script.googleusercontent.com via redirect) e mobile Safari +
-  // alguns Androids tratam essa cadeia de forma inconsistente. Usamos
-  // mode:"no-cors": a requisição é entregue, o servidor processa
-  // normalmente, mas o navegador devolve uma resposta opaca. Aceitamos
-  // como "enviado" desde que o fetch resolva sem lançar exceção.
-  try {
-    await fetch(SUBMIT_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
-      mode: "no-cors",
-      redirect: "follow",
-      keepalive: true,
-    });
-    return { ok: true };
-  } catch(e){
-    return { ok: false, error: String(e) };
-  }
+  // (script.googleusercontent.com via redirect). Com mode:"no-cors" a
+  // resposta é opaca e em mobile a Promise pode demorar muito (ou nem
+  // resolver) — mesmo quando o servidor já processou e enviou o e-mail.
+  //
+  // Estratégia: dispara o fetch, mas não fica refém dele. Depois de
+  // ~3,5 s assumimos "enviado" (o Apps Script continua processando do
+  // lado servidor mesmo se a Promise no cliente nunca fechar).
+  // keepalive:true garante que a requisição complete mesmo após o
+  // navegador trocar de tela.
+  let networkError = false;
+  const sent = fetch(SUBMIT_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+    mode: "no-cors",
+    redirect: "follow",
+    keepalive: true,
+  }).then(() => true).catch(() => { networkError = true; return false; });
+
+  // Concede até 3,5 s para a Promise resolver; caso contrário,
+  // segue assumindo que o pacote já saiu pela rede.
+  await Promise.race([
+    sent,
+    new Promise(r => setTimeout(r, 3500)),
+  ]);
+
+  // Só consideramos falha se houve erro de rede explícito (offline,
+  // DNS, cancelamento). Resposta opaca / timeout = sucesso.
+  return { ok: !networkError };
 }
 
 // ============================================================
