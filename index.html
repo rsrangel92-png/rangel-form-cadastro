@@ -278,7 +278,7 @@ button.ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
 
         <div class="field col-4">
           <label for="nascimento">Data de Nascimento<span class="req">*</span></label>
-          <input id="nascimento" name="nascimento" type="date" required />
+          <input id="nascimento" name="nascimento" type="text" inputmode="numeric" autocomplete="bday" placeholder="DD/MM/AAAA" maxlength="10" required />
           <div class="error" data-error-for="nascimento"></div>
         </div>
 
@@ -472,6 +472,13 @@ function maskPhone(v){
     .replace(/(\d{5})(\d)/, "$1-$2");
 }
 
+function maskData(v){
+  const d = onlyDigits(v).slice(0,8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return d.slice(0,2) + "/" + d.slice(2);
+  return d.slice(0,2) + "/" + d.slice(2,4) + "/" + d.slice(4);
+}
+
 function bindMask(id, fn){
   const el = document.getElementById(id);
   el.addEventListener("input", () => { el.value = fn(el.value); });
@@ -480,6 +487,7 @@ bindMask("cpfCnpj", maskCpfCnpj);
 bindMask("cep", maskCep);
 bindMask("telefone1", maskPhone);
 bindMask("telefone2", maskPhone);
+bindMask("nascimento", maskData);
 
 // ============================================================
 // Validações
@@ -518,6 +526,23 @@ function validaCpfCnpj(v){
   return false;
 }
 
+function validaData(v){
+  // Espera formato DD/MM/AAAA
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(v || "");
+  if (!m) return false;
+  const dia = +m[1], mes = +m[2], ano = +m[3];
+  if (mes < 1 || mes > 12) return false;
+  if (dia < 1 || dia > 31) return false;
+  // Confere combinação dia/mês com Date (pega 31/02, 30/02, anos bissextos)
+  const dt = new Date(ano, mes - 1, dia);
+  if (dt.getFullYear() !== ano || dt.getMonth() !== mes - 1 || dt.getDate() !== dia) return false;
+  // Limites razoáveis: nascimento entre 1900 e hoje
+  const hoje = new Date();
+  if (dt > hoje) return false;
+  if (ano < 1900) return false;
+  return true;
+}
+
 function setError(id, msg){
   const el = document.getElementById(id);
   const err = document.querySelector(`[data-error-for="${id}"]`);
@@ -532,6 +557,10 @@ document.getElementById("cpfCnpj").addEventListener("blur", (e) => {
 document.getElementById("email").addEventListener("blur", (e) => {
   const v = e.target.value.trim();
   setError("email", v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "E-mail inválido." : "");
+});
+document.getElementById("nascimento").addEventListener("blur", (e) => {
+  const v = e.target.value.trim();
+  setError("nascimento", v && !validaData(v) ? "Data inválida. Use DD/MM/AAAA." : "");
 });
 document.getElementById("estado").addEventListener("input", (e) => {
   e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,2);
@@ -564,12 +593,6 @@ document.getElementById("cep").addEventListener("blur", async (e) => {
 // ============================================================
 // Coleta e formatação final
 // ============================================================
-function brDate(iso){
-  if (!iso) return "";
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
-}
-
 function buildRow(){
   const v = (id) => document.getElementById(id).value.trim();
   // Atenção: a ordem aqui DEVE corresponder a LINKLEI_COLUMNS.
@@ -580,7 +603,7 @@ function buildRow(){
     "RG":                 v("rg"),
     "Telefone 1 ":        v("telefone1"),
     "Telefone 2 ":        v("telefone2"),
-    "Data de Nascimento": brDate(v("nascimento")),
+    "Data de Nascimento": v("nascimento"),
     "Estado Civil":       v("estadoCivil"),
     "Profissão":          v("profissao"),
     "CEP":                v("cep"),
@@ -702,6 +725,13 @@ form.addEventListener("submit", async (e) => {
     setError("email","E-mail inválido.");
     ok = false;
     if (!primeiroErro) primeiroErro = document.getElementById("email");
+  }
+
+  const nasc = document.getElementById("nascimento").value.trim();
+  if (nasc && !validaData(nasc)){
+    setError("nascimento","Data inválida. Use DD/MM/AAAA.");
+    ok = false;
+    if (!primeiroErro) primeiroErro = document.getElementById("nascimento");
   }
 
   if (!document.getElementById("consentimento").checked){
